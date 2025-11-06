@@ -1,11 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import DisplayFurniture from './compo/DisplayFurniture.vue'
+import FooterCompo from './compo/FooterCompo.vue'
+import NavBar from './compo/NavBar.vue'
+import LoginViews from './views/loginViews.vue'
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <NavBar />
+  <LoginViews />
+  <DisplayFurniture />
+  <FooterCompo />
 </template>
 
 <style scoped></style>
