@@ -20,13 +20,32 @@
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <div class="flex shrink-0 items-center">
-            <img
-              class="h-8 w-auto"
-              src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-              alt="Your Company"
-            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-lamp-desk-icon lucide-lamp-desk"
+            >
+              <path
+                d="M10.293 2.293a1 1 0 0 1 1.414 0l2.5 2.5 5.994 1.227a1 1 0 0 1 .506 1.687l-7 7a1 1 0 0 1-1.687-.506l-1.227-5.994-2.5-2.5a1 1 0 0 1 0-1.414z"
+              />
+              <path d="m14.207 4.793-3.414 3.414" />
+              <path d="M3 20a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+              <path d="m9.086 6.5-4.793 4.793a1 1 0 0 0-.18 1.17L7 18" />
+            </svg>
+            <span class="text-white text-lg font-semibold tracking-wide"> RecMeuble</span>
           </div>
-          <div class="hidden sm:ml-6 sm:block">
+        </div>
+        <div
+          class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+        >
+          <div class="hidden sm:ml-6 sm:block mr-4">
             <div class="flex space-x-4">
               <a
                 v-for="item in navigation"
@@ -36,25 +55,17 @@
                   item.current
                     ? 'bg-gray-950/50 text-white'
                     : 'text-gray-300 hover:bg-white/5 hover:text-white',
-                  'rounded-md px-3 py-2 text-sm font-medium',
+                  'rounded-md px-3 py-2 text-sm font-medium flex items-center space-x-2',
                 ]"
                 :aria-current="item.current ? 'page' : undefined"
-                >{{ item.name }}</a
               >
+                <HeartLucide v-if="item.icone === 'heart'" class="size-4" />
+                <CartLucide v-else-if="item.icone === 'cart'" class="size-4 text-gray-300" />
+
+                <span>{{ item.name }}</span>
+              </a>
             </div>
           </div>
-        </div>
-        <div
-          class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
-        >
-          <button
-            type="button"
-            class="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
-          >
-            <span class="absolute -inset-1.5"></span>
-            <span class="sr-only">View notifications</span>
-            <BellIcon class="size-6" aria-hidden="true" />
-          </button>
 
           <!-- Profile dropdown -->
           <Menu as="div" class="relative ml-3">
@@ -63,11 +74,23 @@
             >
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">Open user menu</span>
-              <img
-                class="size-8 rounded-full bg-gray-800 outline outline-1 -outline-offset-1 outline-white/10"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#ffffff"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-smile-icon lucide-smile"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                <line x1="9" x2="9.01" y1="9" y2="9" />
+                <line x1="15" x2="15.01" y1="9" y2="9" />
+              </svg>
             </MenuButton>
 
             <transition
@@ -139,8 +162,9 @@
   </Disclosure>
 </template>
 
-
-<script setup  lang="ts">
+<script setup lang="ts">
+import CartLucide from './icons/CartLucide.vue'
+import HeartLucide from './icons/HeartLucide.vue'
 import {
   Disclosure,
   DisclosureButton,
@@ -150,12 +174,10 @@ import {
   MenuItem,
   MenuItems,
 } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
+  { name: 'Favoris', icone: 'heart', href: '#', current: true },
+  { name: 'Panier', icone: 'cart', href: '#', current: false },
 ]
 </script>
