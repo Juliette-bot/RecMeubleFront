@@ -1,20 +1,19 @@
+// src/stores/auth.ts
 import { defineStore } from 'pinia'
-import { login as apiLogin, logout as apiLogout } from '../api/auth'
 
 export const useAuth = defineStore('auth', {
   state: () => ({
-    accessToken: '' as string,
+    token: '' as string,
+    role: 'ANONYMOUS' as 'ANONYMOUS' | 'USER' | 'ADMIN',
   }),
   actions: {
-    async login(email: string, password: string) {
-      this.accessToken = await apiLogin(email, password)
+    setAuth(token: string, role: 'USER' | 'ADMIN') {
+      this.token = token
+      this.role = role
     },
-    async logout() {
-      await apiLogout()
-      this.accessToken = ''
-    },
-    isAuthenticated() {
-      return this.accessToken !== ''
+    logout() {
+      this.token = ''
+      this.role = 'ANONYMOUS'
     },
   },
 })
