@@ -15,6 +15,8 @@ import { ProtectedRole } from '@/types/router'
 import HomeAdmin from '@/views/HomeAdmin.vue'
 import HomeUser from '@/views/HomeUser.vue'
 import ConnexionCompo from '@/components/ConnexionCompo.vue'
+import RegisterCompo from '@/components/RegisterCompo.vue'
+import FurnitureDetails from '@/views/FurnitureDetails.vue'
 
 // ===== Déclaration des routes =====
 const routes = [
@@ -23,6 +25,8 @@ const routes = [
   /* { path: '/furnitures', name: 'furnitures', component: Furnitures },
   { path: '/product/:id', name: 'product', component: Product, props: true }, */
   { path: '/login', name: 'login', component: ConnexionCompo },
+  { path: '/register', name: 'register', component: RegisterCompo },
+  { path: '/furniture/:id', name: 'FurnitureDetails', component: FurnitureDetails },
 
   // 🔐 Espace utilisateur
   {

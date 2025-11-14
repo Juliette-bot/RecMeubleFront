@@ -1,10 +1,10 @@
-<template>
-  <section class="p-6">
-    <h1 class="text-xl font-semibold">Admin Dashboard</h1>
-    <p>Contenu réservé aux ADMIN.</p>
-  </section>
-</template>
-
 <script setup lang="ts">
-// protégé par le router (roles: ADMIN)
+import FurnitureList from '../components/FurnitureList.vue'
 </script>
+
+<template>
+  <main class="min-h-screen bg-gray-50">
+    <!-- ta navbar, hero, etc. -->
+    <FurnitureList />
+  </main>
+</template>
