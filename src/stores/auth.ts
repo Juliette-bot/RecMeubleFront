@@ -1,20 +1,32 @@
+// src/stores/auth.ts
 import { defineStore } from 'pinia'
-import { login as apiLogin, logout as apiLogout } from '../api/auth'
+
+type Role = 'ANONYMOUS' | 'USER' | 'ADMIN'
 
 export const useAuth = defineStore('auth', {
   state: () => ({
-    accessToken: '' as string,
+    token: '' as string, // access token (court)
+    role: 'ANONYMOUS' as Role, // pour l’UI
   }),
   actions: {
-    async login(email: string, password: string) {
-      this.accessToken = await apiLogin(email, password)
+    setToken(token: string) {
+      this.token = token
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1] || ''))
+        const roles: string[] = payload?.roles ?? []
+        this.role = roles.includes('ADMIN')
+          ? 'ADMIN'
+          : roles.includes('USER')
+            ? 'USER'
+            : 'ANONYMOUS'
+      } catch {
+        this.role = 'ANONYMOUS'
+      }
     },
-    async logout() {
-      await apiLogout()
-      this.accessToken = ''
-    },
-    isAuthenticated() {
-      return this.accessToken !== ''
+    // Variante plus sûre : appeler /api/me et setter role depuis la réponse serveur.
+    logout() {
+      this.token = ''
+      this.role = 'ANONYMOUS'
     },
   },
 })
