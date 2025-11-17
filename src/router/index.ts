@@ -17,6 +17,7 @@ import HomeUser from '@/views/HomeUser.vue'
 import ConnexionCompo from '@/components/ConnexionCompo.vue'
 import RegisterCompo from '@/components/RegisterCompo.vue'
 import FurnitureDetails from '@/views/FurnitureDetails.vue'
+import MyFurniture from '@/views/MyFurniture.vue'
 
 // ===== Déclaration des routes =====
 const routes = [
@@ -35,9 +36,11 @@ const routes = [
     component: HomeUser,
     meta: { requiresAuth: true, roles: ['USER'] as ProtectedRole[] },
     children: [
-      // 👉 tu pourras rajouter ici plus tard :
-      // { path: 'profile', component: UserProfile },
-      // { path: 'orders', component: UserOrders },
+      {
+        path: 'furniture',
+        name: 'my-furniture', // ✅ AJOUT
+        component: MyFurniture,
+      },
     ],
   },
 
