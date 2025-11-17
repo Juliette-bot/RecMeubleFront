@@ -1,3 +1,9 @@
+export interface Picture {
+  id: number
+  url: string
+  altText: string
+}
+
 export interface Furniture {
   id: number
   name: string
@@ -8,5 +14,6 @@ export interface Furniture {
   typeName: string | null
   cityName: string | null
   zipcode: string | null
-  status: string | null // ou un union type si tu veux être plus stricte
+  status: string | null
+  pictures?: Picture[]
 }

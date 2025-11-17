@@ -121,6 +121,19 @@
                     </RouterLink>
                   </MenuItem>
                 </template>
+                <template v-else-if="auth.role === 'USER' && can('my-furniture')">
+                  <MenuItem v-slot="{ active }">
+                    <RouterLink
+                      :to="{ name: 'my-furniture' }"
+                      :class="[
+                        active ? 'bg-white/5 text-white' : 'text-gray-300',
+                        'block px-4 py-2 text-sm',
+                      ]"
+                    >
+                      Mes meubles
+                    </RouterLink>
+                  </MenuItem>
+                </template>
 
                 <!-- Connectée : déconnexion -->
                 <template v-if="auth.role !== 'ANONYMOUS'">

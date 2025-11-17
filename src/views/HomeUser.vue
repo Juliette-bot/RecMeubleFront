@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import FurnitureList from '../components/FurnitureList.vue'
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
   <main class="min-h-screen bg-gray-50">
-    <!-- ta navbar, hero, etc. -->
-    <FurnitureList />
+    <!-- Ici s’affichent les routes enfants : dashboard, Mes meubles, etc. -->
+    <RouterView />
   </main>
 </template>

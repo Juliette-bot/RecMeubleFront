@@ -6,13 +6,34 @@ const furniture = ref<Furniture[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
 
+const BACKEND_URL = 'http://localhost:8080'
+
+const getImageUrl = (url: string | undefined) => {
+  if (!url) return ''
+
+  // url reçue par l'API
+
+  let finalUrl: string
+
+  if (url.startsWith('http')) {
+    finalUrl = url
+  } else if (url.startsWith('/')) {
+    finalUrl = BACKEND_URL + url
+  } else {
+    finalUrl = `${BACKEND_URL}/uploads/furniture/${url}`
+  }
+
+  return finalUrl
+}
+
 const fetchFurniture = async () => {
   try {
-    const res = await fetch('/api/furniture') // via proxy Vite comme pour /api/register
+    const res = await fetch('/api/furniture')
     if (!res.ok) {
       throw new Error('Erreur HTTP ' + res.status)
     }
     furniture.value = (await res.json()) as Furniture[]
+    console.log('Furniture reçus :', furniture.value)
   } catch (e) {
     console.error(e)
     error.value = 'Impossible de charger les meubles'
@@ -25,7 +46,6 @@ onMounted(fetchFurniture)
 
 const formatPrice = (price: number) => price.toFixed(2) + ' €'
 </script>
-
 <template>
   <section class="p-6">
     <h2 class="text-2xl font-bold mb-4">Les meubles disponibles</h2>
@@ -43,6 +63,15 @@ const formatPrice = (price: number) => price.toFixed(2) + ' €'
         <article
           class="rounded-2xl shadow bg-white p-4 flex flex-col gap-2 hover:shadow-lg transition cursor-pointer"
         >
+          <!-- Image principale -->
+          <div v-if="item.pictures && item.pictures.length" class="mb-2">
+            <img
+              :src="getImageUrl(item.pictures[0].url)"
+              :alt="item.pictures[0].altText"
+              class="w-full h-48 object-cover rounded-xl"
+            />
+          </div>
+
           <h3 class="text-lg font-semibold">
             {{ item.name }}
           </h3>

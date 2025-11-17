@@ -15,7 +15,12 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
-        // rewrite: (path) => path.replace(/^\/api/, ''), // seulement si ton back n’a pas le prefix /api
+      },
+      '/uploads': {
+        // ✅ déplacé ici, DANS proxy
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
       },
     },
   },

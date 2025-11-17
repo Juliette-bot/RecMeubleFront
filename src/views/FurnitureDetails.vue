@@ -8,6 +8,18 @@ const furniture = ref<Furniture | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 
+const BACKEND_URL = 'http://localhost:8080'
+
+const getImageUrl = (url: string | undefined) => {
+  if (!url) return ''
+
+  if (url.startsWith('http')) return url
+
+  if (url.startsWith('/')) return BACKEND_URL + url
+
+  return `${BACKEND_URL}/uploads/furniture/${url}`
+}
+
 onMounted(async () => {
   try {
     const rawId = route.params.id
@@ -43,19 +55,28 @@ onMounted(async () => {
 
     <div v-if="loading">Chargement...</div>
     <div v-else-if="error">{{ error }}</div>
-
     <div v-else-if="furniture" class="grid md:grid-cols-2 gap-6">
-      <!--    <img
-        :src="furniture.imageUrl" -->
-      <!--   :alt="furniture.name"
-        class="w-full rounded-2xl shadow"
-      />  -->
-
+      <!-- COLONNE GAUCHE : image principale + galerie -->
       <div>
-        <h1 class="text-3xl font-bold mb-2">{{ furniture.name }}</h1>
-        <p class="text-xl font-semibold mb-2">{{ furniture.price }} €</p>
-        <p class="text-sm mb-3">État : {{ furniture.status }}</p>
-        <p>{{ furniture.description }}</p>
+        <!-- IMAGE PRINCIPALE -->
+        <div v-if="furniture?.pictures?.length">
+          <img
+            :src="getImageUrl(furniture.pictures[0].url)"
+            :alt="furniture.pictures[0].altText"
+            class="w-full rounded-2xl shadow"
+          />
+        </div>
+
+        <!-- GALERIE DE MINIATURES -->
+        <div class="flex gap-2 mt-3" v-if="furniture?.pictures?.length > 1">
+          <img
+            v-for="p in furniture.pictures"
+            :key="p.id"
+            :src="getImageUrl(p.url)"
+            :alt="p.altText"
+            class="w-20 h-20 object-cover rounded-lg cursor-pointer border hover:scale-105 transition"
+          />
+        </div>
       </div>
     </div>
   </div>
