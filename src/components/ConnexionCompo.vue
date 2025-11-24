@@ -92,7 +92,7 @@ async function connexion() {
 
     // 2) compat: si le back fournit un rôle, on peut l’utiliser pour l’UI
     if (serverRole !== 'ANONYMOUS') {
-      auth.role = serverRole
+      auth.user.role = serverRole
     }
 
     // 3) redirection

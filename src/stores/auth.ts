@@ -1,32 +1,69 @@
 // src/stores/auth.ts
 import { defineStore } from 'pinia'
+import type { Role } from '@/types/router'
 
-type Role = 'ANONYMOUS' | 'USER' | 'ADMIN'
+interface User {
+  id: number
+  mail: string
+  role: Role
+}
+
+function decodeToken(token: string | null): User {
+  if (!token) {
+    return {
+      id: 0,
+      mail: '',
+      role: 'ANONYMOUS',
+    }
+  }
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    const roles: string[] = payload?.roles ?? []
+
+    return {
+      id: payload?.userId || payload?.id || 0,
+      role: roles.includes('ADMIN') ? 'ADMIN' : roles.includes('USER') ? 'USER' : 'ANONYMOUS',
+      mail: payload?.sub || '',
+    }
+  } catch (error) {
+    console.error('Token invalide:', error)
+    // En cas d'erreur, on retourne un utilisateur anonyme
+    return {
+      id: 0,
+      mail: '',
+      role: 'ANONYMOUS',
+    }
+  }
+}
 
 export const useAuth = defineStore('auth', {
   state: () => ({
-    token: '' as string, // access token (court)
-    role: 'ANONYMOUS' as Role, // pour l’UI
+    user: decodeToken(localStorage.getItem('token')) as User,
+    token: localStorage.getItem('token') as string | null,
   }),
+
+  getters: {
+    isAuthenticated: (state) => !!state.token && state.user.role !== 'ANONYMOUS',
+    isAdmin: (state) => state.user.role === 'ADMIN',
+    isUser: (state) => state.user.role === 'USER',
+  },
+
   actions: {
     setToken(token: string) {
+      localStorage.setItem('token', token)
       this.token = token
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1] || ''))
-        const roles: string[] = payload?.roles ?? []
-        this.role = roles.includes('ADMIN')
-          ? 'ADMIN'
-          : roles.includes('USER')
-            ? 'USER'
-            : 'ANONYMOUS'
-      } catch {
-        this.role = 'ANONYMOUS'
-      }
+      this.user = decodeToken(token)
     },
-    // Variante plus sûre : appeler /api/me et setter role depuis la réponse serveur.
+
     logout() {
-      this.token = ''
-      this.role = 'ANONYMOUS'
+      this.token = null
+      this.user = {
+        id: 0,
+        mail: '',
+        role: 'ANONYMOUS',
+      }
+      localStorage.removeItem('token')
     },
   },
 })
