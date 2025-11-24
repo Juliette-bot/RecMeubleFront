@@ -12,19 +12,18 @@ import Login from '@/views/Login.vue' */
 // Sections "protégées"
 
 import { ProtectedRole } from '@/types/router'
-import HomeAdmin from '@/views/HomeAdmin.vue'
 import HomeUser from '@/views/HomeUser.vue'
 import ConnexionCompo from '@/components/ConnexionCompo.vue'
 import RegisterCompo from '@/components/RegisterCompo.vue'
 import FurnitureDetails from '@/views/FurnitureDetails.vue'
 import MyFurniture from '@/views/MyFurniture.vue'
+import ManagementFurniture from '@/components/ManagementFurniture.vue'
+import ProfilUser from '@/views/ProfilUser.vue'
 
 // ===== Déclaration des routes =====
 const routes = [
   // 🔓 Routes publiques
   { path: '/', name: 'home', component: HomeAnonymous },
-  /* { path: '/furnitures', name: 'furnitures', component: Furnitures },
-  { path: '/product/:id', name: 'product', component: Product, props: true }, */
   { path: '/login', name: 'login', component: ConnexionCompo },
   { path: '/register', name: 'register', component: RegisterCompo },
   { path: '/furniture/:id', name: 'FurnitureDetails', component: FurnitureDetails },
@@ -41,6 +40,11 @@ const routes = [
         name: 'my-furniture', // ✅ AJOUT
         component: MyFurniture,
       },
+      {
+        path: 'profil',
+        name: 'profil',
+        component: ProfilUser,
+      },
     ],
   },
 
@@ -48,11 +52,9 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: HomeAdmin,
+    component: ManagementFurniture,
     meta: { requiresAuth: true, roles: ['ADMIN'] as ProtectedRole[] },
-    children: [
-      // ex: { path: 'dashboard', component: AdminDashboard },
-    ],
+    children: [{ path: 'dashboard', name: 'dashboard', component: ManagementFurniture }],
   },
 
   // 🚫 Route fallback (404)
@@ -79,7 +81,7 @@ router.beforeEach((to, _from, next) => {
 
   // vérification du rôle
   if (to.meta?.roles) {
-    if (!isProtectedRole(auth.role) || !to.meta.roles.includes(auth.role)) {
+    if (!isProtectedRole(auth.user?.role) || !to.meta.roles.includes(auth.user?.role)) {
       return next({ path: '/' })
     }
   }

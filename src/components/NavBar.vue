@@ -32,7 +32,7 @@
             <div class="flex space-x-4">
               <!-- Lien USER -->
               <RouterLink
-                v-if="auth.role === 'USER' && can('user')"
+                v-if="auth.user.role === 'USER' && can('user')"
                 :to="{ path: '/user' }"
                 class="text-gray-300 hover:bg-white/5 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >
@@ -41,7 +41,7 @@
 
               <!-- Lien ADMIN -->
               <RouterLink
-                v-if="auth.role === 'ADMIN' && can('admin')"
+                v-if="auth.user.role === 'ADMIN' && can('admin')"
                 :to="{ path: '/admin' }"
                 class="text-gray-300 hover:bg-white/5 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
               >
@@ -93,7 +93,7 @@
                 class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 outline outline-1 -outline-offset-1 outline-white/10"
               >
                 <!-- Anonyme -->
-                <template v-if="auth.role === 'ANONYMOUS' && can('login')">
+                <template v-if="auth.user.role === 'ANONYMOUS' && can('login')">
                   <MenuItem v-slot="{ active }">
                     <RouterLink
                       to="/login"
@@ -108,7 +108,7 @@
                 </template>
 
                 <!-- Connectée : profil (quand la route existera) -->
-                <template v-else-if="can('profile')">
+                <template v-else-if="auth.user?.role === 'USER' && can('profile')">
                   <MenuItem v-slot="{ active }">
                     <RouterLink
                       to="/profile"
@@ -121,7 +121,8 @@
                     </RouterLink>
                   </MenuItem>
                 </template>
-                <template v-else-if="auth.role === 'USER' && can('my-furniture')">
+
+                <template v-else-if="auth.user?.role === 'USER' && can('my-furniture')">
                   <MenuItem v-slot="{ active }">
                     <RouterLink
                       :to="{ name: 'my-furniture' }"
@@ -135,8 +136,22 @@
                   </MenuItem>
                 </template>
 
+                <template v-else-if="auth.user?.role === 'ADMIN' && can('dashboard')">
+                  <MenuItem v-slot="{ active }">
+                    <RouterLink
+                      :to="{ name: 'dashboard' }"
+                      :class="[
+                        active ? 'bg-white/5 text-white' : 'text-gray-300',
+                        'block px-4 py-2 text-sm',
+                      ]"
+                    >
+                      Dashboard
+                    </RouterLink>
+                  </MenuItem>
+                </template>
+
                 <!-- Connectée : déconnexion -->
-                <template v-if="auth.role !== 'ANONYMOUS'">
+                <template v-if="auth.user.role !== 'ANONYMOUS'">
                   <MenuItem v-slot="{ active }">
                     <button
                       @click="logout"
@@ -184,5 +199,5 @@ function logout() {
   auth.logout()
   if (router.hasRoute('login')) router.push({ name: 'login' })
 }
-console.log('auth.role =', auth.role)
+console.log('auth.role =', auth.user.role)
 </script>

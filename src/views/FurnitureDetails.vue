@@ -19,6 +19,7 @@ const getImageUrl = (url: string | undefined) => {
 
   return `${BACKEND_URL}/uploads/furniture/${url}`
 }
+const formatPrice = (price: number) => price.toFixed(2) + ' €'
 
 onMounted(async () => {
   try {
@@ -68,7 +69,7 @@ onMounted(async () => {
         </div>
 
         <!-- GALERIE DE MINIATURES -->
-        <div class="flex gap-2 mt-3" v-if="furniture?.pictures?.length > 1">
+        <div class="flex gap-2 mt-3" v-if="furniture.pictures && furniture.pictures.length > 1">
           <img
             v-for="p in furniture.pictures"
             :key="p.id"
@@ -77,6 +78,30 @@ onMounted(async () => {
             class="w-20 h-20 object-cover rounded-lg cursor-pointer border hover:scale-105 transition"
           />
         </div>
+
+        <h3 class="text-lg font-semibold">
+          {{ furniture.name }}
+        </h3>
+
+        <p class="text-sm text-gray-600">
+          {{ furniture.description }}
+        </p>
+
+        <p class="text-sm text-gray-700" v-if="furniture.typeName">
+          Type : <span class="font-medium">{{ furniture.typeName }}</span>
+        </p>
+
+        <p class="text-sm text-gray-700" v-if="furniture.cityName">
+          Localisation :
+          <span class="font-medium">
+            {{ furniture.cityName }}
+            <span v-if="furniture.zipcode">({{ furniture.zipcode }})</span>
+          </span>
+        </p>
+
+        <p class="mt-auto text-right font-bold text-indigo-700">
+          {{ formatPrice(furniture.price) }}
+        </p>
       </div>
     </div>
   </div>
