@@ -1,181 +1,289 @@
 <template>
-  <Disclosure
-    as="nav"
-    class="relative bg-gray-800/50 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10"
-    v-slot="{ open }"
-  >
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
-        <!-- Mobile menu -->
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <DisclosureButton
-            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500"
-          >
-            <Bars3Icon v-if="!open" class="block size-6" aria-hidden="true" />
-            <XMarkIcon v-else class="block size-6" aria-hidden="true" />
-          </DisclosureButton>
-        </div>
-
+  <nav class="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
         <!-- Logo -->
-        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex shrink-0 items-center space-x-2">
-            <!-- ton logo -->
-            <span class="text-white text-lg font-semibold tracking-wide">RecMeuble</span>
+        <RouterLink to="/" class="group flex items-center gap-3">
+          <div class="rounded-lg bg-indigo-50 p-2 transition group-hover:bg-indigo-100">
+            <LightLucide class="h-6 w-6 text-indigo-600" />
           </div>
+          <span
+            class="hidden sm:block text-xl font-bold text-gray-900 transition group-hover:text-indigo-600"
+          >
+            RecMeuble
+          </span>
+        </RouterLink>
+
+        <!-- Navigation centrale -->
+        <div class="hidden md:flex items-center gap-8">
+          <RouterLink
+            to="/"
+            class="text-sm font-medium text-gray-700 hover:text-indigo-600 transition"
+          >
+            Accueil
+          </RouterLink>
+          <RouterLink
+            to="/my-furniture"
+            class="text-sm font-medium text-gray-700 hover:text-indigo-600 transition"
+          >
+            Mes meubles
+          </RouterLink>
         </div>
 
-        <!-- Menu principal -->
-        <div
-          class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
-        >
-          <Menu as="div" class="relative ml-3">
-            <MenuButton
-              class="relative flex items-center justify-center rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-              title="Compte"
+        <!-- Actions droite -->
+        <div class="flex items-center gap-4">
+          <!-- Favoris 👇 NOUVEAU -->
+          <RouterLink
+            to="/favorites"
+            class="group relative flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-gray-50"
+          >
+            <HeartLucide class="h-6 w-6 text-gray-700 group-hover:text-red-500 transition" />
+            <span
+              class="hidden sm:block text-sm font-medium text-gray-700 group-hover:text-red-500 transition"
             >
-              <!-- Icône visible -->
+              Favoris
+            </span>
+          </RouterLink>
+
+          <!-- Panier -->
+          <RouterLink
+            to="/cart"
+            class="group relative flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-gray-50"
+          >
+            <CartLucide class="h-6 w-6 text-gray-700 group-hover:text-indigo-600 transition" />
+            <span
+              class="hidden sm:block text-sm font-medium text-gray-700 group-hover:text-indigo-600 transition"
+            >
+              Panier
+            </span>
+            <span
+              v-if="cartCount > 0"
+              class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs font-bold text-white"
+            >
+              {{ cartCount }}
+            </span>
+          </RouterLink>
+
+          <!-- Menu utilisateur -->
+          <div class="relative">
+            <button
+              @click="showUserMenu = !showUserMenu"
+              class="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-gray-50"
+            >
+              <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                <span class="text-sm font-semibold text-indigo-600">
+                  {{ userInitials }}
+                </span>
+              </div>
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
+                class="h-4 w-4 text-gray-500 transition"
+                :class="{ 'rotate-180': showUserMenu }"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <path d="M10 10a4 4 0 100-8 4 4 0 000 8z" />
                 <path
-                  fill-rule="evenodd"
-                  d="M.458 16.042A9.956 9.956 0 0110 12c3.315 0 6.262 1.61 8.042 4.042A10 10 0 10.458 16.042z"
-                  clip-rule="evenodd"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
                 />
               </svg>
-              <span class="sr-only">Ouvrir le menu utilisateur</span>
-            </MenuButton>
+            </button>
 
+            <!-- Dropdown menu -->
             <Transition
-              enter-active-class="transition ease-out duration-100"
-              enter-from-class="transform opacity-0 scale-95"
-              enter-to-class="transform scale-100"
-              leave-active-class="transition ease-in duration-75"
-              leave-from-class="transform scale-100"
-              leave-to-class="transform opacity-0 scale-95"
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="scale-95 opacity-0"
+              enter-to-class="scale-100 opacity-100"
+              leave-active-class="transition duration-150 ease-in"
+              leave-from-class="scale-100 opacity-100"
+              leave-to-class="scale-95 opacity-0"
             >
-              <MenuItems
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 outline outline-1 -outline-offset-1 outline-white/10"
+              <div
+                v-if="showUserMenu"
+                @click="showUserMenu = false"
+                class="absolute right-0 mt-2 w-56 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
               >
-                <!-- Anonyme -->
-                <template v-if="auth.user.role === 'ANONYMOUS' && can('login')">
-                  <MenuItem v-slot="{ active }">
-                    <RouterLink
-                      to="/login"
-                      :class="[
-                        active ? 'bg-white/5 text-white' : 'text-gray-300',
-                        'block px-4 py-2 text-sm',
-                      ]"
+                <div class="p-2">
+                  <RouterLink
+                    to="/profil"
+                    class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                  >
+                    <svg
+                      class="h-5 w-5 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      Connexion
-                    </RouterLink>
-                  </MenuItem>
-                </template>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    Mon profil
+                  </RouterLink>
 
-                <!-- Connectée : profil (quand la route existera) -->
-                <template v-else-if="auth.user?.role === 'USER'">
-                  <MenuItem v-slot="{ active }">
-                    <RouterLink
-                      :to="{ name: 'profil' }"
-                      :class="[
-                        active ? 'bg-white/5 text-white' : 'text-gray-300',
-                        'block px-4 py-2 text-sm',
-                      ]"
+                  <RouterLink
+                    v-if="isAdmin"
+                    to="/admin"
+                    class="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                  >
+                    <svg
+                      class="h-5 w-5 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      Mon profil
-                    </RouterLink>
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <RouterLink
-                      :to="{ name: 'my-furniture' }"
-                      :class="[
-                        active ? 'bg-white/5 text-white' : 'text-gray-300',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                    >
-                      Mes meubles
-                    </RouterLink>
-                  </MenuItem>
-                  <MenuItem v-slot="{ active }">
-                    <RouterLink
-                      :to="{ name: 'cart' }"
-                      :class="[
-                        active ? 'bg-white/5 text-white' : 'text-gray-300',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                    >
-                      Panier
-                    </RouterLink>
-                  </MenuItem>
-                </template>
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    Administration
+                  </RouterLink>
 
-                <template v-else-if="auth.user?.role === 'ADMIN' && can('dashboard')">
-                  <MenuItem v-slot="{ active }">
-                    <RouterLink
-                      :to="{ name: 'dashboard' }"
-                      :class="[
-                        active ? 'bg-white/5 text-white' : 'text-gray-300',
-                        'block px-4 py-2 text-sm',
-                      ]"
-                    >
-                      Dashboard
-                    </RouterLink>
-                  </MenuItem>
-                </template>
+                  <div class="my-1 h-px bg-gray-200"></div>
 
-                <!-- Connectée : déconnexion -->
-                <template v-if="auth.user.role !== 'ANONYMOUS'">
-                  <MenuItem v-slot="{ active }">
-                    <button
-                      @click="logout"
-                      :class="[
-                        active ? 'bg-white/5 text-white' : 'text-gray-300',
-                        'block w-full text-left px-4 py-2 text-sm',
-                      ]"
-                    >
-                      Déconnexion
-                    </button>
-                  </MenuItem>
-                </template>
-              </MenuItems>
+                  <button
+                    @click="handleLogout"
+                    class="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+                  >
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Déconnexion
+                  </button>
+                </div>
+              </div>
             </Transition>
-          </Menu>
+          </div>
+
+          <!-- Menu mobile burger -->
+          <button
+            @click="showMobileMenu = !showMobileMenu"
+            class="md:hidden rounded-lg p-2 text-gray-700 hover:bg-gray-50"
+          >
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                v-if="!showMobileMenu"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+              <path
+                v-else
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
       </div>
+
+      <!-- Menu mobile -->
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-2"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-2"
+      >
+        <div v-if="showMobileMenu" class="md:hidden border-t border-gray-200 py-3">
+          <div class="space-y-1 px-2">
+            <RouterLink
+              to="/"
+              @click="showMobileMenu = false"
+              class="block rounded-lg px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Accueil
+            </RouterLink>
+            <RouterLink
+              to="/my-furniture"
+              @click="showMobileMenu = false"
+              class="block rounded-lg px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Mes meubles
+            </RouterLink>
+            <RouterLink
+              to="/favorites"
+              @click="showMobileMenu = false"
+              class="block rounded-lg px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Favoris
+            </RouterLink>
+            <RouterLink
+              to="/cart"
+              @click="showMobileMenu = false"
+              class="block rounded-lg px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Panier
+            </RouterLink>
+          </div>
+        </div>
+      </Transition>
     </div>
-  </Disclosure>
+  </nav>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuth } from '@/stores/auth'
-import { RouterLink, useRouter } from 'vue-router' // ← important
+import { useCart } from '@/stores/cart'
+import LightLucide from '@/components/icons/LightLucide.vue'
+import CartLucide from '@/components/icons/CartLucide.vue'
+import HeartLucide from '@/components/icons/HeartLucide.vue'
 
-import {
-  Disclosure,
-  DisclosureButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-} from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-
-const auth = useAuth()
 const router = useRouter()
+const auth = useAuth()
+const cart = useCart()
 
-const can = (nameOrPath: string) =>
-  nameOrPath.startsWith('/')
-    ? router.getRoutes().some((r) => r.path === nameOrPath)
-    : router.hasRoute(nameOrPath)
+const showUserMenu = ref(false)
+const showMobileMenu = ref(false)
 
-function logout() {
+const cartCount = computed(() => cart.counter)
+const isAdmin = computed(() => auth.user?.role === 'ADMIN')
+
+const userInitials = computed(() => {
+  if (!auth.user) return 'U'
+  const first = auth.user.firstName?.[0] || ''
+  const last = auth.user.lastName?.[0] || ''
+  return (first + last).toUpperCase() || 'U'
+})
+
+const handleLogout = () => {
   auth.logout()
-  if (router.hasRoute('login')) router.push({ name: 'login' })
+  router.push('/login')
 }
-console.log('auth.role =', auth.user.role)
+
+// Fermer les menus quand on clique ailleurs
+const closeMenus = () => {
+  showUserMenu.value = false
+  showMobileMenu.value = false
+}
+
+// Optionnel : fermer au scroll
+if (typeof window !== 'undefined') {
+  window.addEventListener('scroll', closeMenus)
+}
 </script>

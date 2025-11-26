@@ -12,7 +12,6 @@ import Login from '@/views/Login.vue' */
 // Sections "protégées"
 
 import { ProtectedRole } from '@/types/router'
-import HomeUser from '@/views/HomeUser.vue'
 import ConnexionCompo from '@/components/ConnexionCompo.vue'
 import RegisterCompo from '@/components/RegisterCompo.vue'
 import FurnitureDetails from '@/views/FurnitureDetails.vue'
@@ -29,29 +28,24 @@ const routes = [
   { path: '/register', name: 'register', component: RegisterCompo },
   { path: '/furniture/:id', name: 'FurnitureDetails', component: FurnitureDetails },
 
-  // 🔐 Espace utilisateur
+  // 🔐 Routes USER (sans parent /user)
   {
-    path: '/user',
-    name: 'user',
-    component: HomeUser,
+    path: '/my-furniture',
+    name: 'my-furniture',
+    component: MyFurniture,
     meta: { requiresAuth: true, roles: ['USER'] as ProtectedRole[] },
-    children: [
-      {
-        path: 'furniture',
-        name: 'my-furniture',
-        component: MyFurniture,
-      },
-      {
-        path: 'profil',
-        name: 'profil',
-        component: ProfilUser,
-      },
-      {
-        path: 'cart',
-        name: 'cart',
-        component: CartOrder,
-      },
-    ],
+  },
+  {
+    path: '/profil',
+    name: 'profil',
+    component: ProfilUser,
+    meta: { requiresAuth: true, roles: ['USER'] as ProtectedRole[] },
+  },
+  {
+    path: '/cart',
+    name: 'cart',
+    component: CartOrder,
+    meta: { requiresAuth: true, roles: ['USER'] as ProtectedRole[] },
   },
 
   // 🔐 Espace admin
@@ -60,7 +54,13 @@ const routes = [
     name: 'admin',
     component: ManagementFurniture,
     meta: { requiresAuth: true, roles: ['ADMIN'] as ProtectedRole[] },
-    children: [{ path: 'dashboard', name: 'dashboard', component: ManagementFurniture }],
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: ManagementFurniture,
+      },
+    ],
   },
 
   // 🚫 Route fallback (404)

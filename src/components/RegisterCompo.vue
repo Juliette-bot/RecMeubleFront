@@ -119,7 +119,7 @@ async function register() {
     auth.setToken(token)
 
     if (serverRole !== 'ANONYMOUS') {
-      auth.role = serverRole
+      auth.user.role = serverRole
     }
 
     const redirect = (route.query.redirect as string | undefined) || '/'

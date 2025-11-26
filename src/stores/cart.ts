@@ -66,6 +66,7 @@ export const useCart = defineStore('cart', {
       this.cart = this.cart.filter((i) => i !== furniture)
       this.counter--
       this.saveCart()
+      console.log('Cart après suppression:', this.cart)
     },
 
     clearCart() {
