@@ -35,7 +35,7 @@
         Continuer mes achats
       </button>
       <RouterLink
-        to="/user/cart"
+        to="/cart"
         class="flex-1 rounded-lg bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Voir le panier

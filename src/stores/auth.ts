@@ -6,6 +6,8 @@ interface User {
   id: number
   mail: string
   role: Role
+  firstName: string
+  lastName: string
 }
 
 function decodeToken(token: string | null): User {
@@ -14,6 +16,8 @@ function decodeToken(token: string | null): User {
       id: 0,
       mail: '',
       role: 'ANONYMOUS',
+      firstName: '',
+      lastName: '',
     }
   }
 
@@ -25,6 +29,8 @@ function decodeToken(token: string | null): User {
       id: payload?.userId || payload?.id || 0,
       role: roles.includes('ADMIN') ? 'ADMIN' : roles.includes('USER') ? 'USER' : 'ANONYMOUS',
       mail: payload?.sub || '',
+      firstName: '',
+      lastName: '',
     }
   } catch (error) {
     console.error('Token invalide:', error)
@@ -33,6 +39,8 @@ function decodeToken(token: string | null): User {
       id: 0,
       mail: '',
       role: 'ANONYMOUS',
+      firstName: '',
+      lastName: '',
     }
   }
 }
@@ -62,6 +70,8 @@ export const useAuth = defineStore('auth', {
         id: 0,
         mail: '',
         role: 'ANONYMOUS',
+        firstName: '',
+        lastName: '',
       }
       localStorage.removeItem('token')
     },
