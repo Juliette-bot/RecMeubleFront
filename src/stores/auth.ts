@@ -40,7 +40,7 @@ function decodeToken(token: string | null): User {
 export const useAuth = defineStore('auth', {
   state: () => ({
     user: decodeToken(localStorage.getItem('token')) as User,
-    token: localStorage.getItem('token') as string | null,
+    token: localStorage.getItem('token') as string | null, // ici le token est stocké
   }),
 
   getters: {

@@ -28,36 +28,6 @@
         <div
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
-          <div class="hidden sm:ml-6 sm:block mr-4">
-            <div class="flex space-x-4">
-              <!-- Lien USER -->
-              <RouterLink
-                v-if="auth.user.role === 'USER' && can('user')"
-                :to="{ path: '/user' }"
-                class="text-gray-300 hover:bg-white/5 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              >
-                Espace utilisateur
-              </RouterLink>
-
-              <!-- Lien ADMIN -->
-              <RouterLink
-                v-if="auth.user.role === 'ADMIN' && can('admin')"
-                :to="{ path: '/admin' }"
-                class="text-gray-300 hover:bg-white/5 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              >
-                Admin
-              </RouterLink>
-
-              <!-- Lien public -->
-              <RouterLink
-                v-if="can('furnitures')"
-                :to="{ name: 'furnitures' }"
-                class="text-gray-300 hover:bg-white/5 hover:text-white rounded-md px-3 py-2 text-sm font-medium"
-              >
-                Meubles
-              </RouterLink>
-            </div>
-          </div>
           <Menu as="div" class="relative ml-3">
             <MenuButton
               class="relative flex items-center justify-center rounded-full w-9 h-9 bg-white/10 hover:bg-white/20 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
@@ -108,10 +78,10 @@
                 </template>
 
                 <!-- Connectée : profil (quand la route existera) -->
-                <template v-else-if="auth.user?.role === 'USER' && can('profile')">
+                <template v-else-if="auth.user?.role === 'USER'">
                   <MenuItem v-slot="{ active }">
                     <RouterLink
-                      to="/profile"
+                      :to="{ name: 'profil' }"
                       :class="[
                         active ? 'bg-white/5 text-white' : 'text-gray-300',
                         'block px-4 py-2 text-sm',
@@ -120,9 +90,6 @@
                       Mon profil
                     </RouterLink>
                   </MenuItem>
-                </template>
-
-                <template v-else-if="auth.user?.role === 'USER' && can('my-furniture')">
                   <MenuItem v-slot="{ active }">
                     <RouterLink
                       :to="{ name: 'my-furniture' }"
@@ -132,6 +99,17 @@
                       ]"
                     >
                       Mes meubles
+                    </RouterLink>
+                  </MenuItem>
+                  <MenuItem v-slot="{ active }">
+                    <RouterLink
+                      :to="{ name: 'cart' }"
+                      :class="[
+                        active ? 'bg-white/5 text-white' : 'text-gray-300',
+                        'block px-4 py-2 text-sm',
+                      ]"
+                    >
+                      Panier
                     </RouterLink>
                   </MenuItem>
                 </template>
