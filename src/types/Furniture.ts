@@ -16,4 +16,6 @@ export interface Furniture {
   zipcode: string | null
   status: string | null
   pictures?: Picture[]
+  quantity: number
+  deliveryCosts: number
 }

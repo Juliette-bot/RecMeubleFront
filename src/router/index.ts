@@ -19,6 +19,7 @@ import FurnitureDetails from '@/views/FurnitureDetails.vue'
 import MyFurniture from '@/views/MyFurniture.vue'
 import ManagementFurniture from '@/components/ManagementFurniture.vue'
 import ProfilUser from '@/views/ProfilUser.vue'
+import CartOrder from '@/views/CartOrder.vue'
 
 // ===== Déclaration des routes =====
 const routes = [
@@ -37,13 +38,18 @@ const routes = [
     children: [
       {
         path: 'furniture',
-        name: 'my-furniture', // ✅ AJOUT
+        name: 'my-furniture',
         component: MyFurniture,
       },
       {
         path: 'profil',
         name: 'profil',
         component: ProfilUser,
+      },
+      {
+        path: 'cart',
+        name: 'cart',
+        component: CartOrder,
       },
     ],
   },
